@@ -21,3 +21,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+node_modules/
+__pycache__/
+venv/
+.env
+chromadb/

@@ -25,18 +25,23 @@ export default function Results() {
     return <h2>No Evaluation Result Found</h2>;
   }
 
- const overall = Math.round(
-  (
-    result.relevance.score +
-    result.accuracy.accuracy_score +
-    result.hallucination.hallucination_score
-  ) / 3
-);
+const overall = result.verdict.overall_score;
 
-  const band = {
-  bg: "bg-green-100",
-  text: "text-green-700",
-};
+ const band =
+  result.verdict.verdict === "Pass"
+    ? {
+        bg: "bg-green-100",
+        text: "text-green-700",
+      }
+    : result.verdict.verdict === "Needs Improvement"
+    ? {
+        bg: "bg-yellow-100",
+        text: "text-yellow-700",
+      }
+    : {
+        bg: "bg-red-100",
+        text: "text-red-700",
+      };
     const METRICS = [
   {
     name: "Relevance",
@@ -59,6 +64,13 @@ export default function Results() {
     color: "bg-amber-500",
     desc: result.hallucination.status,
   },
+  {
+  name: "Completeness",
+  score: result.completeness.completeness_score,
+  icon: CheckCircle2,
+  color: "bg-blue-500",
+  desc: result.completeness.reason,
+},
 ];
 
 
@@ -94,9 +106,9 @@ export default function Results() {
         <div className="card p-6 flex flex-col items-center justify-center animate-scale-in">
           <ScoreRing score={overall} size={180} color="#2563eb" label="Overall Score" />
           <span className={`badge mt-4 ${band.bg} ${band.text}`}>
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            {overall >= 8 ? "Excellent" : overall >= 6 ? "Good" : "Poor"}
-          </span>
+  <CheckCircle2 className="h-3.5 w-3.5" />
+  {result.verdict.verdict}
+</span>
         </div>
 
         <div className="lg:col-span-2 card p-6 animate-fade-in">
@@ -159,6 +171,7 @@ export default function Results() {
             {[
   result.relevance.reason,
   result.accuracy.evidence,
+  result.completeness.reason,
   result.hallucination.status,
   ...result.hallucination.hallucinated_claims,
 ].map((point, i) => (
@@ -178,10 +191,13 @@ export default function Results() {
             <h3 className="section-title">Recommendation</h3>
           </div>
           <div className={`rounded-xl ${band.bg} ${band.text} p-4 mb-4`}>
-            <p className="text-sm font-bold"> Verdict: {overall >= 8 ? "Excellent" : overall >= 6 ? "Good" : "Poor"}</p>
-            <p className="text-xs mt-1 opacity-80">  Overall score {overall}/10 — safe for deployment</p>
+            <p className="text-sm font-bold">
+Verdict : {result.verdict.verdict}
+</p>
+            <p className="text-xs mt-1 opacity-80">  Overall Score : {result.verdict.overall_score}/10</p>
           </div>
-          <p className="text-sm text-slate-600 leading-relaxed"> {result.accuracy.evidence}</p>
+
+          <p className="text-sm text-slate-600 leading-relaxed"> {result.verdict.summary}</p>
           <Link to="/history" className="mt-5 btn-secondary w-full">
             View in History
             <ArrowRight className="h-4 w-4" />

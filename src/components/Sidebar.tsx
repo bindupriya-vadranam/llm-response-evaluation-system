@@ -98,12 +98,18 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         <div className="p-3 border-t border-slate-200">
           <div className="rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 p-4 text-white">
             <p className="text-xs font-semibold uppercase tracking-wider text-brand-100">
-              Milestone 1
-            </p>
-            <p className="mt-1 text-sm font-bold">Prototype Build</p>
-            <p className="mt-1 text-[11px] text-brand-100 leading-relaxed">
-              Frontend prototype with sample data. No backend logic connected.
-            </p>
+  AI Response Quality Evaluator
+</p>
+
+<p className="mt-1 text-sm font-bold">
+  Multi-Agent Evaluation System
+</p>
+
+<p className="mt-1 text-[11px] text-brand-100 leading-relaxed">
+  Evaluates AI-generated responses using Relevance, Accuracy,
+  Hallucination, and Completeness analysis with RAG-powered
+  knowledge retrieval and intelligent verdict generation.
+</p>
           </div>
         </div>
       </aside>

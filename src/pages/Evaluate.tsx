@@ -3,17 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import {
   FileInput,
   Upload,
-  FileText,
-  X,
   Sparkles,
   Info,
   CheckCircle2,
   HelpCircle,
   MessageSquare,
   BookOpen,
-  Paperclip,
 } from 'lucide-react';
-
 const SAMPLE_QUESTION = 'Explain how transformer attention mechanisms work.';
 const SAMPLE_RESPONSE =
   'Transformer attention allows a model to focus on different parts of the input sequence when producing each output token. It computes scaled dot-product attention using query, key, and value vectors, enabling parallel processing and long-range dependency capture without recurrence.';
@@ -25,17 +21,22 @@ export default function Evaluate() {
   const [question, setQuestion] = useState(SAMPLE_QUESTION);
   const [response, setResponse] = useState(SAMPLE_RESPONSE);
   const [reference, setReference] = useState(SAMPLE_REFERENCE);
-  const [files, setFiles] = useState<{ name: string; size: string }[]>([]);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    setFiles((prev) => [...prev, { name: f.name, size: `${(f.size / 1024).toFixed(1)} KB` }]);
-  };
-
-  const removeFile = (i: number) => setFiles((prev) => prev.filter((_, idx) => idx !== i));
+ 
+  
 
   const canSubmit = question.trim() && response.trim();
+  const handleCsvUpload = (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+
+  if (e.target.files && e.target.files[0]) {
+    setCsvFile(e.target.files[0]);
+  }
+
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -67,6 +68,42 @@ export default function Evaluate() {
     alert("Backend connection failed");
   }
 };
+const handleBatchUpload = async () => {
+
+  if (!csvFile) {
+    alert("Please select a CSV file.");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append("file", csvFile);
+
+  try {
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/batch-evaluate",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    console.log(data);
+
+    alert("Batch Evaluation Completed!");
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Batch Evaluation Failed");
+
+  }
+
+};
 
   const loadSample = () => {
     setQuestion(SAMPLE_QUESTION);
@@ -84,7 +121,7 @@ export default function Evaluate() {
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Evaluation Input Module</h2>
             <p className="mt-1 text-sm text-slate-500 max-w-2xl">
-              Provide a question, the AI response to evaluate, an optional reference answer, and any source documents for grounding.
+              Provide a question, the AI response to evaluate, and an optional reference answer.
             </p>
           </div>
         </div>
@@ -128,7 +165,7 @@ export default function Evaluate() {
               className="input-field resize-none"
             />
             <p className="mt-1.5 text-xs text-slate-400">{response.length} characters</p>
-          </div>
+         
 
           {/* Reference Answer */}
           <div className="card p-5 animate-fade-in">
@@ -146,42 +183,37 @@ export default function Evaluate() {
             />
             <p className="mt-1.5 text-xs text-slate-400">{reference.length} characters</p>
           </div>
-
-          {/* Upload */}
-          <div className="card p-5 animate-fade-in">
-            <label className="flex items-center gap-2 mb-3">
-              <Paperclip className="h-4 w-4 text-slate-500" />
-              <span className="text-sm font-semibold text-slate-800">Upload Source Document</span>
-            </label>
-            <label className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center cursor-pointer transition-all hover:border-brand-300 hover:bg-brand-50/40">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
-                <Upload className="h-5 w-5 text-brand-600" />
-              </div>
-              <p className="text-sm font-semibold text-slate-700">Click to upload or drag and drop</p>
-              <p className="text-xs text-slate-400">PDF, DOCX, TXT — max 10 MB</p>
-              <input type="file" accept=".pdf,.docx,.txt" className="hidden" onChange={handleFile} />
-            </label>
-
-            {files.length > 0 && (
-              <div className="mt-3 space-y-2">
-                {files.map((f, i) => (
-                  <div key={i} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 animate-fade-in-fast">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-                      <FileText className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-slate-800 truncate">{f.name}</p>
-                      <p className="text-xs text-slate-400">{f.size}</p>
-                    </div>
-                    <button type="button" onClick={() => removeFile(i)} className="btn-ghost !p-1.5 text-slate-400 hover:text-rose-500">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
-        </div>
+          <div className="card p-5 animate-fade-in">
+
+  <h3 className="text-lg font-semibold mb-3">
+    Batch Evaluation
+  </h3>
+
+  <input
+    type="file"
+    accept=".csv"
+    onChange={handleCsvUpload}
+    className="border rounded-lg p-2 w-full"
+  />
+
+  {csvFile && (
+    <p className="mt-3 text-green-600">
+      Selected File: {csvFile.name}
+    </p>
+  )}
+
+  <button
+    type="button"
+    onClick={handleBatchUpload}
+    className="btn-primary mt-4"
+  >
+    Upload CSV & Batch Evaluate
+  </button>
+
+</div>
+ </div>
+
 
         {/* Sidebar summary */}
         <div className="space-y-5">
@@ -206,10 +238,7 @@ export default function Evaluate() {
                 <span className="text-slate-500">Reference Answer</span>
                 <span className="font-semibold text-slate-400">{reference.trim() ? 'Optional' : 'Optional'}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500">Source Documents</span>
-                <span className="font-semibold text-slate-600">{files.length} file{files.length !== 1 ? 's' : ''}</span>
-              </div>
+              
             </div>
 
             <div className="mt-5 rounded-xl bg-brand-50 p-3 flex gap-2">

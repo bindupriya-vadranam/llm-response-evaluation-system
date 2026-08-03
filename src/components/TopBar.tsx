@@ -61,13 +61,8 @@ export default function TopBar({ onMenu }: TopBarProps) {
         </button>
 
         <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-sm font-bold text-white">
-            AR
-          </div>
-          <div className="hidden lg:block leading-tight">
-            <p className="text-sm font-semibold text-slate-800">Aarav Rao</p>
-            <p className="text-[11px] text-slate-500">Evaluation Engineer</p>
-          </div>
+    
+        
         </div>
       </div>
       <p className="px-4 sm:px-6 pb-3 text-sm text-slate-500 -mt-1">{meta.subtitle}</p>

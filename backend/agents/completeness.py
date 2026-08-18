@@ -1,10 +1,5 @@
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-
-# Load embedding model
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
-
+from model_loader import model
 def completeness_score(question, response):
 
     # Generate embeddings

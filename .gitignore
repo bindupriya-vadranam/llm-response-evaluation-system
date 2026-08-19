@@ -26,3 +26,7 @@ __pycache__/
 venv/
 .env
 chromadb/
+backend/reports/
+backend/batch_results.csv
+backend/uploads/batch_results.csv
+backend/uploads/invalid.csv

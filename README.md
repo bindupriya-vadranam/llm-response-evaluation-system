@@ -368,7 +368,7 @@ AI-Response-Quality-Evaluator-Agent-main/
 │
 ├── Technical_Documentation_Milestone4.docx
 ├── Project_Report.docx
-└── Agile_Project_Documentation_Milestone1_to_4.docx
+└── Agile_Documentation_Bindu_Priya.xlsx
 How to Run
 Backend
 cd backend
@@ -442,7 +442,7 @@ Future work
 
 File:
 
-Agile_Project_Documentation_Milestone1_to_4.docx
+Agile_Documentation_Bindu_Priya.xlsx
 Limitations
 Evaluation quality depends on the quality of the reference knowledge base.
 Semantic retrieval may occasionally retrieve incomplete or less relevant context.

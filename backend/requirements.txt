@@ -7,7 +7,4 @@ scikit-learn
 sentence-transformers
 chromadb
 reportlab
-datasets
 torch
-nltk
-textblob

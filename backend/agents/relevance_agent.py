@@ -1,8 +1,9 @@
 from sklearn.metrics.pairwise import cosine_similarity
-from model_loader import model
+from model_loader import get_model
 
 
 def relevance_score(question, response):
+    model = get_model()
 
     q_embedding = model.encode(question).reshape(1, -1)
     r_embedding = model.encode(response).reshape(1, -1)

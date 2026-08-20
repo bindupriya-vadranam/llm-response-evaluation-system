@@ -1,6 +1,7 @@
 from sklearn.metrics.pairwise import cosine_similarity
-from model_loader import model
+from model_loader import get_model
 def completeness_score(question, response):
+    model = get_model()
 
     # Generate embeddings
     question_embedding = model.encode(question).reshape(1, -1)

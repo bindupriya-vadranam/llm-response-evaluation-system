@@ -1,24 +1,12 @@
 import torch
 import chromadb
-from sentence_transformers import SentenceTransformer
+from model_loader import get_model
+
 
 # Reduce CPU memory usage
 torch.set_num_threads(1)
 
 # Model is loaded only when it is actually needed
-_model = None
-
-
-def get_model():
-    global _model
-
-    if _model is None:
-        _model = SentenceTransformer(
-            "all-MiniLM-L6-v2",
-            device="cpu"
-        )
-
-    return _model
 
 
 # Connect to existing ChromaDB
